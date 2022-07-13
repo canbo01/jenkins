@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/canbo01/jenkins.git
+    repoURL: https://github.com/canbo01/jenkins_argocd.git
     targetRevision: HEAD
     path: development
   destination:
