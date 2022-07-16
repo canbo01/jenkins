@@ -1,26 +1,36 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
-  labels:
-    app: jenkins
   name: jenkins
+  namespace: jenkins-dev
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: jenkins
-  strategy: {}
   template:
     metadata:
-      creationTimestamp: null
       labels:
         app: jenkins
     spec:
       containers:
       - image: jenkins/jenkins:lts
-        name: jenkins
+        imagePullPolicy: Always
+        name: container-0
         ports:
-        - containerPort: 8080
-        resources: {}
-status: {}
+          - name: http-port
+            containerPort: 8080
+          - name: jnlp-port
+            containerPort: 50000
+        securityContext:
+          allowPrivilegeEscalation: true
+          privileged: true
+          readOnlyRootFilesystem: false
+          runAsUser: 0
+        volumeMounts:
+          - mountPath: /var/jenkins_home
+            name: jenkins-vol
+    volumes:
+    - name: jenkins-vol
+      persistentVolumeClaim:
+      claimName: jenkins-pvc
